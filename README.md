@@ -4,6 +4,7 @@ Projet Base de données 2020
 # Jeu de données
 
 * https://www.globalbioticinteractions.org/data
+* [Obtenir un extrait du jeu de données](https://www.globalbioticinteractions.org/browse/?interactionType=interactsWith&resultType=json)
 
 # Cours OrientDB
 * [Cours assez complet de OrientDB video tutoriel](https://www.udemy.com/join/login-popup/?next=/course/orientdb-getting-started/learn/lecture/1726168%3Ffbclid%3DIwAR0x50e3rihTrFB7Ioxl8oPSazh7teVPhxU1n6Zcv0OohMSTKn2ldNJiriA#overview)
