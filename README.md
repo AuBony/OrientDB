@@ -12,3 +12,4 @@ Projet Base de données 2020
 * [Cours OrientDB complet](https://orientdb.com/docs/last/gettingstarted/demodb/queries/DemoDB-Queries-Orders.html)
 * [Passage de Neo4j à OrientDB](https://orientdb.com/docs/2.2.x/Studio-Neo4j-Importer.html)
 * [OrientDB en Python : PyOrient](https://orientdb.com/docs/3.0.x/pyorient/PyOrient.html?fbclid=IwAR09zfmF7PE0dRJjS3FWWHS-a2WLLJ1x9OHwA61CUUh0hVUo1LNqjvWgRos)
+* [Sélection dans une base de données OrientDB](https://stph.scenari-community.org/contribs/nos/orient1/co/OrientDB-1-exercices_1.html)
