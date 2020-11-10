@@ -9,6 +9,7 @@
 ######################
 # Installation de pyorient : mettre dans la console ceci -> pip install pyorient --user
 import pyorient
+# code magique de Oriane -> pip install --upgrade git+https://github.com/OpenConjecture/pyorient.git
 
 ######################
 ### Connexion a la BDD
@@ -27,7 +28,7 @@ db_name='Tolkien-Arda'
 
 client = pyorient.OrientDB("localhost", 2424)
 client.set_session_token(True)
-session_id = client.connect("root", "motdepasse",)
+session_id = client.connect("root", userpassword)
 
 #On affiche les bases de dooneesde l'utilisateur pour vérifier la bonne connexxion au serveur
 print(client.db_list())
