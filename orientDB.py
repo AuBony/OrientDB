@@ -18,11 +18,7 @@ import pyorient
 # Demande à l'utilisateur les informations nécessaires
 # (possiblement à changer pour rendre le document final)
 
-
 userpassword = input("Quel est le mot de passe choisi pour la base de données ? --> ")
-#db_name = input("Quel est le nom de la base de données à laquelle se connecter ? --> ")
-
-db_name='Tolkien-Arda'
 
 # Initialisation client
 
@@ -30,16 +26,15 @@ client = pyorient.OrientDB("localhost", 2424)
 client.set_session_token(True)
 session_id = client.connect("root", userpassword)
 
-#On affiche les bases de dooneesde l'utilisateur pour vérifier la bonne connexxion au serveur
+#On affiche les bases de doonees de l'utilisateur pour vérifier la bonne connexion au serveur
 print(client.db_list())
 
 #On se connecte à la base de données
+db_name='Tolkien-Arda'
 client.db_open(db_name, "root", userpassword)
 
 
  
-# Liste des BDD (pour vérifier si la connexion fonctionne)
-
 
 # Création de la BDD
 # client.db_create( db_name, pyorient.DB_TYPE_GRAPH, pyorient.STORAGE_TYPE_MEMORY )
@@ -48,4 +43,4 @@ client.db_open(db_name, "root", userpassword)
 ### Déconnexion de la BDD
 ######################
 
-#client.shutdown()
+client.shutdown()
