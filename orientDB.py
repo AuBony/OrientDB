@@ -70,9 +70,25 @@ for clust in list_clusters:
 for k in data_lotr.get("records"):
 #    print(k) 
     
+    # Choix de l'ID en fonction du nom du cluster
+    if k.get("@class") == "CREATURE":
+        id_cluster = 18
+    elif k.get("@class") == "LOCATION":
+        id_cluster = 19
+    elif k.get("@class") == "EVENT":
+        id_cluster = 20
+    elif k.get("@class") == "BEGETS":
+        id_cluster = 21
+    elif k.get("@class") == "LOVES":
+        id_cluster = 22
+    elif k.get("@class") == "HASSIBLING":
+        id_cluster = 23
+        
     # Sélection des records pour lesquels @class in list_clusters
     if k.get("@class") in list_clusters:
         print(k)
+
+
 
 ######################
 ### Déconnexion de la BDD
