@@ -10,7 +10,8 @@
 # Libraries
 # Installation de pyorient : mettre dans la console ceci -> pip install pyorient --user
 # code magique de Oriane -> pip install --upgrade git+https://github.com/OpenConjecture/pyorient.git
-import pyorient    # Lien Python et OrientDB
+import pyorient
+from pyorient.ogm import Graph, Config
 import json        # Importation du fichier de données json
 
 # Données
@@ -35,8 +36,11 @@ if client.db_exists("tolkien"):
     client.db_drop("tolkien")
     print("Suppression de la base de donnée 'tolkien' pour la recréer")
 
+# Importation de la BDD qui marche pas
+#client.command("IMPORT DATABASE D:/Agrocampus/M2/UE4-ComputerScienceforBigData/Projet/OrientDB/donnees/data_tolkien.json")
+
 # On créé une BDD tolkien
-client.db_create("tolkien")
+client.db_create("tolkien", pyorient.DB_TYPE_GRAPH)
 print("Base de données 'tolkien' créée.")
 print("\n----- Bases de données actuelles de l'utilisateur -----")
 print(client.db_list())
@@ -48,14 +52,6 @@ print("\n----- Connexion à la base de données 'tolkien' -----")
 ######################
 ### Création des clusters de la BDD
 ######################
-# Ancienne version à ne pas supprimer au cas où ça bugue avec la nouvelle version de list_clusters
-#    list_clusters = ["internal", "index","manindex", # ID 0 à 2
-#                     "default", "orole", "ouser", # 3 à 5
-#                     "ofunction", "oschedule", "orids", # 6 à 8
-#                     "v","e","creature", # 9 à 11
-#                     "location","event","begets", # 12 à 14
-#                     "loves","hassibling", "_studio", # 15 à 17
-#                     "osecuritypolicy"]# 18
 
 list_clusters = ["Creature", "Location","Event","BEGETS", "LOVES","HASSIBLING"]
 
