@@ -101,13 +101,13 @@ for k in data_lotr.get("records"):
                     "gatewaylink": k.get("gatewaylink"),
                     "born": k.get("born"),
                     "altname": k.get("altname"),
-#                    "in_BEGETS": k.get("in_BEGETS"),
+                    "in_BEGETS": k.get("in_BEGETS"),
             		"died": k.get("died"),
             		"significance": k.get("significance"),
             		"out_BEGETS": k.get("out_BEGETS"),
             		"name": k.get("name"),
             		"location": k.get("location"),
-#            		"in_LOVES": k.get("in_LOVES"),
+            		"in_LOVES": k.get("in_LOVES"),
             		"illustrator": k.get("illustrator"),
                     }
         id_cluster = 18
