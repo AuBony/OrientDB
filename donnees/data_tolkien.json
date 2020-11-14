@@ -1,6 +1,6 @@
 {
 	"info": {
-		"name": "Tolkien-Arda",
+		"name": "tolkien",
 		"default-cluster-id": 3,
 		"exporter-version": 12,
 		"engine-version": "3.1.3 - Veloce (build cb96bcc4f03a7647d16743432bff3fbee9e3e0df, branch 3.1.x)",
