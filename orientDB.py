@@ -118,13 +118,26 @@ print("Propriétés de Event créées")
 print("Toutes les propriétés ont été créées")
 
 ######################
-### Création des records dans la BDD
+### Création des records SYSTEM dans la BDD
 ######################
-    
-print("\n----- Insertion des records dans la base de données -----")
+# Ne fonctionne pas
+
+#    print("\n----- Insertion des records des classes SYSTEM dans la base de données -----")
+#    for k in data_lotr.get("records"):
+#        if k.get("@class") == "_studio":
+#            record_k = {"type":  k.get("type"),
+#                        "config": k.get("config"),
+#    #                    "user": "#6"+str(k.get("user")[2:len(k.get("user", " "))])
+#                        }
+#            id_cluster = 28
+#            client.record_create(id_cluster, record_k)
+
+######################
+### Création des records USER dans la BDD
+######################
+print("\n----- Insertion des records des classes USER dans la base de données -----")
 
 for k in data_lotr.get("records"):
-    
     # Classe Creature
     if k.get("@class") == "Creature":
         out_beget_tmp = k.get("out_BEGETS", [])
@@ -228,7 +241,7 @@ for k in data_lotr.get("records"):
     if k.get("@class") in list_clusters:
         client.record_create(id_cluster, record_k)
         
-print("Insertion des records terminée")
+print("Insertion des records USER terminée")
 
 
 ######################
