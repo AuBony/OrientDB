@@ -283,10 +283,31 @@ for i in range(len(query2)):
         res = ("La région "+ str(query2[i].location)+" est la "+ str(i+1) +"ème plus grande région, et elle héberge "+str(query2[i].regioncount)+" personnes")
     print(res)
     
-# 3eme requete
+# Troisième requete
 print("\n→ Requête 3 : Combien d'enfants a Samwise Gamgee ?")
 query3 = client.query("MATCH {Class: Creature, as: Father, where: (name='Samwise Gamgee')}-BEGETS->{Class: Creature, as: Children} RETURN Children")
 print("Samwise a "+str(len(query3))+" enfants.")
+
+#Quatrième requete
+print("\n→ Requête 4 : Combien y a t-il de triangle amoureux et qui en fait partis ?")
+query4= client.query("MATCH {Class: Creature, as: C1}-LOVES->{Class: Creature, as: C2}-LOVES->{Class: Creature, as: C3} RETURN C1.name as C1, C2.name as C2, C3.name as C3")
+print("Il y a "+str(len(query4))+" couples")
+for i in range(len(query4)):
+    print("Les membres du "+str(i+1)+"ème triangle amoureux sont: "+query4[i].C1+" , "+query4[i].C2+" et "+query4[i].C3)
+
+#Cinquième requête
+print("\n→ Requête 5 : Combien de générations directes séparent Isildur et Aragorn II ?")
+query5= client.query("SELECT count(*) FROM (SELECT expand(path) FROM (SELECT shortestPath($from, $to) AS path LET  $from = (SELECT FROM Creature WHERE name='Aragorn II'), $to = (SELECT FROM Creature WHERE name='Isildur') UNWIND path))")
+print(str(query5[0].count-2)+ " générations séparent Aragorn et Isildur")
+
+#Sixième requête
+query6= client.query("SELECT name FROM (SELECT expand(path) FROM (SELECT shortestPath($from, $to) AS path LET  $from = (SELECT FROM Creature WHERE name='Aragorn II'), $to = (SELECT FROM Creature WHERE name='Isildur') UNWIND path) limit 100)")
+print(len(query6))
+arbre= ""
+
+for i in range(len(query6)):
+    print(query6[i].name)
+print(arbre)
 
 ######################
 ### Déconnexion de la BDD
