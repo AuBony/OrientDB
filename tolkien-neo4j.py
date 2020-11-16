@@ -1,10 +1,19 @@
+
+# AVANT DE LANCER LE PYTHON
+# Creer et activer une nouvelle base ocale sur Neo4j Desktop avec en user "neo4j" et en password "Neo4J"
+# Attention, si vous ne prenez pas une nouvelle base, tous vos noeuds et relations deja existants seront supprimes!
+# Ouvrir le browser
+# Mettez a jour le chemin pour acceder au fichier de donnees depuis votre ordinateur
+
+path = 'C:/Users/HP/Documents/GitHub/OrientDB/Donnees/'
+
 from py2neo import Graph, Node, Relationship
 import json
 
 graph = Graph("bolt://localhost", auth=("neo4j", "Neo4J"))
 graph.delete_all()
 
-data_lotr = json.load(open('C:/Users/HP/Documents/GitHub/OrientDB/Donnees/data_tolkien.json', 'r'))
+data_lotr = json.load(open(path+'data_tolkien.json', 'r'))
 
 ## DICO DES RECORDS
 
@@ -83,8 +92,8 @@ rel = []
 
 for k in reco_rel.items():
     a = k[1]
-    fr = crea[a.get('in')]
-    to = crea[a.get('out')]
+    fr = crea[a.get('out')]
+    to = crea[a.get('in')]
     rel.append(Relationship(fr,str(a.get('@class')),to))
 
 for r in rel :
@@ -92,5 +101,16 @@ for r in rel :
 
 ## REQUETE
 
-a = list(graph.run("MATCH (n:Creature) WHERE n.race='Hobbit' RETURN n"))
+a = list(graph.run("MATCH (n:Creature) WHERE n.name='Samwise Gamgee' RETURN n"))
+
+# Trouver les creatures concernees par l'amour
+
+R1 = list(graph.run("MATCH (n :Creature) –[ :LOVES] – (m) return n,m"))
+
+# Trouver tous les enfants de Sam
+# MATCH (c:Creature {name : "Samwise Gamgee"})-[:BEGETS]->(e:Creature) RETURN c,e
+
+R3 = list(graph.run("MATCH (c:Creature {name : "Samwise Gamgee"})-[:BEGETS]->(e:Creature) RETURN c,e"))
+
+R3 = list(graph.run("MATCH (c:Creature) – [:`BEGETS`] –> (e:Creature) WHERE c.name="Samwise Gamgee" RETURN e"))
 
