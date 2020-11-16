@@ -136,7 +136,7 @@ print("Toutes les propriétés ont été créées")
 ######################
 ### Création des records USER dans la BDD
 ######################
-print("\n----- Insertion des records des classes USER dans la base de données -----")
+print("\n----- Insertion des records dans la base de données -----")
 
 for k in data_lotr.get("records"):
     # Classe Creature
@@ -255,25 +255,41 @@ print("Insertion des edge terminée")
 
 
 ######################
+### Requetes
+######################
+
+print("\n\n\n----- Requêtes sur la base de donnée -----\n")
+
+# Requête introductive
+print("→ Requête introductive : Quand est né Frodon Saquet et quand est-il mort ?")
+requete = "SELECT * FROM Creature WHERE name = 'Frodo Baggins'"
+print("Requête demandée : " + requete)
+data = client.query(requete)
+print("Frodon est né le " + str(data[0].born) + " et est mort le " + str(data[0].died) )
+
+# Premiere requete
+print("\n→ Requête 1 : Combien de couples y a-t-il en tout ?")
+query1 = client.query("select count(*) from Loves")
+print("Il y a "+ str(query1[0].count)+ " couples.")
+
+# Deuxième requête
+print("\n→ Requête 2 : Quelles sont les régions les plus peuplées ?")
+query2 = client.query("select location, count(*) as regioncount from Creature group by location order by regioncount DESC limit 4 ")
+print("Les trois régions les plus peuplées sont:")
+for i in range(len(query2)):
+    if i==0:
+        res = ("Il y a "+ str(query2[i].regioncount)+" personnes dont on ne connait pas la région.")
+    else:
+        res = ("La région "+ str(query2[i].location)+" est la "+ str(i+1) +"ème plus grande région, et elle héberge "+str(query2[i].regioncount)+" personnes")
+    print(res)
+    
+# 3eme requete
+print("\n→ Requête 3 : Combien d'enfants a Samwise Gamgee ?")
+query3 = client.query("MATCH {Class: Creature, as: Father, where: (name='Samwise Gamgee')}-BEGETS->{Class: Creature, as: Children} RETURN Children")
+print("Samwise a "+str(len(query3))+" enfants.")
+
+######################
 ### Déconnexion de la BDD
 ######################
 client.db_close()
 print("\n----- Déconnexion de la base de données 'tolkien' -----\n\n")
-
-
-######################
-### Connexion a la BDD Tolkien-Arda
-######################
-
-client = pyorient.OrientDB("localhost", 2424)
-client.set_session_token(True)
-session_id = client.connect("root", userpassword)
-
-client.db_open("Tolkien-Arda", "root", userpassword)
-print("\n----- Connexion à la base de données 'Tolkien-Arda' -----\n")
-
-print("Requête 1 : Quand est né Frodon Saquet et quand est-il mort ?")
-requete = "SELECT * FROM Creature WHERE name = 'Frodo Baggins'"
-print("Requête : " + requete)
-data = client.query(requete)
-print("Frodon est né le " + str(data[0].born) + " et est mort le " + str(data[0].died) + "\n\n")
