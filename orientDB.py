@@ -37,7 +37,6 @@ if client.db_exists("tolkien"):
     print("Suppression de la base de donnée 'tolkien' pour la recréer")
 
 # Importation de la BDD qui marche pas
-#client.command("IMPORT DATABASE D:/Agrocampus/M2/UE4-ComputerScienceforBigData/Projet/OrientDB/donnees/data_tolkien.json")
 
 # On créé une BDD tolkien
 client.db_create("tolkien", pyorient.DB_TYPE_GRAPH)
@@ -54,6 +53,8 @@ print("\n----- Connexion à la base de données 'tolkien' -----")
 ######################
 
 list_clusters = ["Creature", "Location","Event","BEGETS", "LOVES","HASSIBLING"]
+list_clusters_vertex = ["Creature", "Location","Event"]
+list_clusters_edge = ["BEGETS", "LOVES","HASSIBLING"]
 
 print("\n----- Création des cluster -----")
 for clust in list_clusters:
@@ -140,50 +141,66 @@ print("\n----- Insertion des records des classes USER dans la base de données -
 for k in data_lotr.get("records"):
     # Classe Creature
     if k.get("@class") == "Creature":
-        out_beget_tmp = k.get("out_BEGETS", [])
-        for i in range(0, len(out_beget_tmp)):
-            out_beget_tmp[i] = "#21"+str(out_beget_tmp[i][3:len(out_beget_tmp[i])])
+#        out_beget_tmp = k.get("out_BEGETS", [])
+#        for i in range(0, len(out_beget_tmp)):
+#            out_beget_tmp[i] = "#21"+str(out_beget_tmp[i][3:len(out_beget_tmp[i])])
+#
+#        in_beget_tmp = k.get("in_BEGETS", [])
+#        for i in range(0, len(in_beget_tmp)):
+#            in_beget_tmp[i] = "#21"+str(in_beget_tmp[i][3:len(in_beget_tmp[i])])
+#            
+#        in_loves_tmp = k.get("in_LOVES", [])
+#        for i in range(0, len(in_loves_tmp)):
+#            in_loves_tmp[i] = "#22"+str(in_loves_tmp[i][3:len(in_loves_tmp[i])])
+#            
+#        in_hassibling_tmp = k.get("in_HASSIBLING", [])
+#        for i in range(0, len(in_hassibling_tmp)):
+#            in_hassibling_tmp[i] = "#23"+str(in_hassibling_tmp[i][3:len(in_hassibling_tmp[i])])
+#        
+#        out_loves_tmp = k.get("out_LOVES", [])
+#        for i in range(0, len(out_loves_tmp)):
+#            out_loves_tmp[i] = "#22"+str(out_loves_tmp[i][3:len(out_loves_tmp[i])])
+#            
+#        out_hassibling_tmp = k.get("out_HASSIBLING", [])
+#        for i in range(0, len(out_hassibling_tmp)):
+#            out_hassibling_tmp[i] = "#23"+str(out_hassibling_tmp[i][3:len(out_hassibling_tmp[i])])
+            
+#        record_k = {"searchname": k.get("searchname"),
+#                    "uniquename": k.get("uniquename"),
+#                    "gender": k.get("gender"),
+#                    "race": k.get("race"),
+#                    "gatewaylink": k.get("gatewaylink"),
+#                    "born": k.get("born"),
+#                    "altname": k.get("altname"),
+#            		"died": k.get("died"),
+#            		"significance": k.get("significance"),
+#                    "name": k.get("name"),
+#            		"location": k.get("location"),
+#                    "in_HASSIBLING": in_hassibling_tmp,
+#                    "out_HASSIBLING": out_hassibling_tmp,
+#                    "in_BEGETS": in_beget_tmp, # ID BEGETS 14 -> 21
+#            		"out_BEGETS": out_beget_tmp, # ID BEGETS 14 -> 21
+#            		"in_LOVES": in_loves_tmp, # ID LOVE 15 -> 22
+#                    "out_LOVES": out_loves_tmp, 
+#            		"illustrator": k.get("illustrator"),
+#                    }
+        # altname et location : remplacement des " en '
+        location = str(k.get('location')).replace('"', "'")
+        altname = str(k.get('altname')).replace('"', "'")
 
-        in_beget_tmp = k.get("in_BEGETS", [])
-        for i in range(0, len(in_beget_tmp)):
-            in_beget_tmp[i] = "#21"+str(in_beget_tmp[i][3:len(in_beget_tmp[i])])
-            
-        in_loves_tmp = k.get("in_LOVES", [])
-        for i in range(0, len(in_loves_tmp)):
-            in_loves_tmp[i] = "#22"+str(in_loves_tmp[i][3:len(in_loves_tmp[i])])
-            
-        in_hassibling_tmp = k.get("in_HASSIBLING", [])
-        for i in range(0, len(in_hassibling_tmp)):
-            in_hassibling_tmp[i] = "#23"+str(in_hassibling_tmp[i][3:len(in_hassibling_tmp[i])])
-        
-        out_loves_tmp = k.get("out_LOVES", [])
-        for i in range(0, len(out_loves_tmp)):
-            out_loves_tmp[i] = "#22"+str(out_loves_tmp[i][3:len(out_loves_tmp[i])])
-            
-        out_hassibling_tmp = k.get("out_HASSIBLING", [])
-        for i in range(0, len(out_hassibling_tmp)):
-            out_hassibling_tmp[i] = "#23"+str(out_hassibling_tmp[i][3:len(out_hassibling_tmp[i])])
-            
-        record_k = {"searchname": k.get("searchname"),
-                    "uniquename": k.get("uniquename"),
-                    "gender": k.get("gender"),
-                    "race": k.get("race"),
-                    "gatewaylink": k.get("gatewaylink"),
-                    "born": k.get("born"),
-                    "altname": k.get("altname"),
-            		"died": k.get("died"),
-            		"significance": k.get("significance"),
-                    "name": k.get("name"),
-            		"location": k.get("location"),
-                    "in_HASSIBLING": in_hassibling_tmp,
-                    "out_HASSIBLING": out_hassibling_tmp,
-                    "in_BEGETS": in_beget_tmp, # ID BEGETS 14 -> 21
-            		"out_BEGETS": out_beget_tmp, # ID BEGETS 14 -> 21
-            		"in_LOVES": in_loves_tmp, # ID LOVE 15 -> 22
-                    "out_LOVES": out_loves_tmp, 
-            		"illustrator": k.get("illustrator"),
-                    }
-        id_cluster = 18
+        query = ('CREATE VERTEX Creature SET searchname = "' + str(k.get('searchname')) +
+                    '", uniquename = "' + str(k.get('uniquename')) +
+                    '", gender = "'+ str(k.get('gender')) +
+                    '", race = "' + str(k.get('race')) +
+                    '", gatewaylink = "' + str(k.get('gatewaylink')) +
+                    '", born = "' + str(k.get('born')) +
+                    '", altname = "' + str(altname) +
+            		'", died = "' + str(k.get('died')) +
+            		'", significance = "' + str(k.get('significance')) +
+                    '", name = "' + str(k.get('name')) +
+            		'", location = "' + str(location) +
+            		'", illustrator = "' + str(k.get('illustrator')) + '"')
+        client.command(query)
         
     elif k.get("@class") == "Location":
         record_k = {"significance":  k.get("significance"),
@@ -201,6 +218,7 @@ for k in data_lotr.get("records"):
             		"illustrator": k.get("illustrator"),
                     }
         id_cluster = 19
+        client.record_create(id_cluster, record_k)
         
     elif k.get("@class") == "Event":
         record_k = {"uniquename": k.get("uniquename"),
@@ -209,42 +227,53 @@ for k in data_lotr.get("records"):
             		"illustrator": k.get("illustrator"),
                     }
         id_cluster = 20
+        client.record_create(id_cluster, record_k)
         
-    elif k.get("@class") == "BEGETS":
+print("Insertion des records des vertex terminée")
+
+
+for k in data_lotr.get("records"):
+    if k.get("@class") == "BEGETS":
         in_tmp = "#18"+str(k.get("in")[3:len(k.get("in"))])
         out_tmp = "#18"+str(k.get("out")[3:len(k.get("out"))])
-
-        record_k = {"in": in_tmp, 
-            		"out": out_tmp
-                    }
-        id_cluster = 21
+        query = "CREATE EDGE BEGETS FROM (SELECT FROM Creature WHERE @rid = '" + in_tmp + "' ) TO ( SELECT FROM Creature WHERE @rid = '" + out_tmp + "' )"
+        client.command(query)
         
     elif k.get("@class") == "LOVES":
         in_tmp = "#18"+str(k.get("in")[3:len(k.get("in"))])
         out_tmp = "#18"+str(k.get("out")[3:len(k.get("out"))])
-            
-        record_k = {"in": in_tmp, 
-            		"out": out_tmp
-                    }
-        id_cluster = 22
+        query = "CREATE EDGE LOVES FROM (SELECT FROM Creature WHERE @rid = '" + in_tmp + "' ) TO ( SELECT FROM Creature WHERE @rid = '" + out_tmp + "' )"
+        client.command(query)
         
     elif k.get("@class") == "HASSIBLING":
         in_tmp = "#18"+str(k.get("in")[3:len(k.get("in"))])
         out_tmp = "#18"+str(k.get("out")[3:len(k.get("out"))])
-            
-        record_k = {"in": in_tmp, 
-            		"out": out_tmp
-                    }
-        id_cluster = 23
-    
-    # Insertion dans la BDD du record
-    if k.get("@class") in list_clusters:
-        client.record_create(id_cluster, record_k)
-        
-print("Insertion des records USER terminée")
+        query = "CREATE EDGE HASSIBLING FROM (SELECT FROM Creature WHERE @rid = '" + in_tmp + "' ) TO ( SELECT FROM Creature WHERE @rid = '" + out_tmp + "' )"
+        client.command(query)
+
+print("Insertion des edge terminée")
 
 
 ######################
 ### Déconnexion de la BDD
 ######################
 client.db_close()
+print("\n----- Déconnexion de la base de données 'tolkien' -----\n\n")
+
+
+######################
+### Connexion a la BDD Tolkien-Arda
+######################
+
+client = pyorient.OrientDB("localhost", 2424)
+client.set_session_token(True)
+session_id = client.connect("root", userpassword)
+
+client.db_open("Tolkien-Arda", "root", userpassword)
+print("\n----- Connexion à la base de données 'Tolkien-Arda' -----\n")
+
+print("Requête 1 : Quand est né Frodon Saquet et quand est-il mort ?")
+requete = "SELECT * FROM Creature WHERE name = 'Frodo Baggins'"
+print("Requête : " + requete)
+data = client.query(requete)
+print("Frodon est né le " + str(data[0].born) + " et est mort le " + str(data[0].died) + "\n\n")
