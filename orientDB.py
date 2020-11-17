@@ -53,7 +53,7 @@ print("\n----- Connexion à la base de données 'tolkien' -----")
 ######################
 
 list_clusters = ["Creature", "Location","Event","BEGETS", "LOVES","HASSIBLING"]
-id_clusters = [18, 19, 20, 21, 22, 23]
+id_clusters = [35,36,37,38,39,40]
 list_clusters_vertex = ["Creature", "Location","Event"]
 list_clusters_edge = ["BEGETS", "LOVES","HASSIBLING"]
 
@@ -161,7 +161,7 @@ for k in data_lotr.get("records"):
             		"canon": k.get("canon"),
             		"illustrator": k.get("illustrator"),
                     }
-        id_cluster = 19
+        id_cluster = 36
         client.record_create(id_cluster, record_k)
         
     elif k.get("@class") == "Event":
@@ -170,7 +170,7 @@ for k in data_lotr.get("records"):
                     "description": k.get("description"),
             		"illustrator": k.get("illustrator"),
                     }
-        id_cluster = 20
+        id_cluster = 37
         client.record_create(id_cluster, record_k)
         
 print("Insertion des records des vertex terminée")
@@ -178,20 +178,20 @@ print("Insertion des records des vertex terminée")
 
 for k in data_lotr.get("records"):
     if k.get("@class") == "BEGETS":
-        in_tmp = "#18"+str(k.get("in")[3:len(k.get("in"))])
-        out_tmp = "#18"+str(k.get("out")[3:len(k.get("out"))])
+        in_tmp = "#35"+str(k.get("in")[3:len(k.get("in"))])
+        out_tmp = "#35"+str(k.get("out")[3:len(k.get("out"))])
         query = "CREATE EDGE BEGETS FROM (SELECT FROM Creature WHERE @rid = '" + in_tmp + "' ) TO ( SELECT FROM Creature WHERE @rid = '" + out_tmp + "' )"
         client.command(query)
         
     elif k.get("@class") == "LOVES":
-        in_tmp = "#18"+str(k.get("in")[3:len(k.get("in"))])
-        out_tmp = "#18"+str(k.get("out")[3:len(k.get("out"))])
+        in_tmp = "#35"+str(k.get("in")[3:len(k.get("in"))])
+        out_tmp = "#35"+str(k.get("out")[3:len(k.get("out"))])
         query = "CREATE EDGE LOVES FROM (SELECT FROM Creature WHERE @rid = '" + in_tmp + "' ) TO ( SELECT FROM Creature WHERE @rid = '" + out_tmp + "' )"
         client.command(query)
         
     elif k.get("@class") == "HASSIBLING":
-        in_tmp = "#18"+str(k.get("in")[3:len(k.get("in"))])
-        out_tmp = "#18"+str(k.get("out")[3:len(k.get("out"))])
+        in_tmp = "#35"+str(k.get("in")[3:len(k.get("in"))])
+        out_tmp = "#35"+str(k.get("out")[3:len(k.get("out"))])
         query = "CREATE EDGE HASSIBLING FROM (SELECT FROM Creature WHERE @rid = '" + in_tmp + "' ) TO ( SELECT FROM Creature WHERE @rid = '" + out_tmp + "' )"
         client.command(query)
 
