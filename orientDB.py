@@ -53,13 +53,15 @@ print("\n----- Connexion à la base de données 'tolkien' -----")
 ######################
 
 list_clusters = ["Creature", "Location","Event","BEGETS", "LOVES","HASSIBLING"]
+id_clusters = [18, 19, 20, 21, 22, 23]
 list_clusters_vertex = ["Creature", "Location","Event"]
 list_clusters_edge = ["BEGETS", "LOVES","HASSIBLING"]
 
 print("\n----- Création des cluster -----")
-for clust in list_clusters:
-    client.data_cluster_add(clust, pyorient.CLUSTER_TYPE_PHYSICAL)
-    print('Cluster physique créé : %s' % clust)
+for i in range(len(list_clusters)):
+    query = ("CREATE CLUSTER %s ID %s" % (list_clusters[i], id_clusters[i]))
+    client.command(query)
+    print('Cluster physique créé : %s' % (list_clusters[i]))
 
 
 ######################
@@ -69,9 +71,9 @@ for clust in list_clusters:
 print("\n----- Création des classes -----")
 # Vertex Classes
 client.command("CREATE CLASS AbstractName EXTENDS V")
-client.command("CREATE CLASS Event EXTENDS V") # 13
-client.command("CREATE CLASS Creature EXTENDS AbstractName") # 11
-client.command("CREATE CLASS Location EXTENDS AbstractName") # 12
+client.command("CREATE CLASS Event EXTENDS V") # 13 -> 20
+client.command("CREATE CLASS Creature EXTENDS AbstractName") # 11 -> 18
+client.command("CREATE CLASS Location EXTENDS AbstractName") # 12 -> 19
 
 # Edge Classes
 client.command("CREATE CLASS BEGETS EXTENDS E") # 14
