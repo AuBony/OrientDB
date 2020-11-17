@@ -245,12 +245,11 @@ query5= client.query("SELECT count(*) FROM (SELECT expand(path) FROM (SELECT sho
 print(str(query5[0].count-2)+ " générations séparent Aragorn et Isildur")
 
 #Sixième requête
+print("\n→ Requête 6: Quels sont ces ancêtres?")
 query6= client.query("SELECT name FROM (SELECT expand(path) FROM (SELECT shortestPath($from, $to) AS path LET  $from = (SELECT FROM Creature WHERE name='Aragorn II'), $to = (SELECT FROM Creature WHERE name='Isildur') UNWIND path) limit 100)")
-print(len(query6))
 arbre= ""
-
 for i in range(len(query6)):
-    print(query6[i].name)
+    arbre+=query6[i].name+" "
 print(arbre)
 
 ######################
