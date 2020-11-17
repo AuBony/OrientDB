@@ -30,8 +30,8 @@ import pyorient
 from py2neo import Graph, Node, Relationship
 import json   # Importation du fichier de données json
 import timeit # Comparaison des temps de calculs
-import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # Données
 data_lotr = json.load(open('./donnees/data_tolkien.json', 'r', encoding='utf-8'))
@@ -238,7 +238,7 @@ print("\n----- La base de données a bien été créée dans OrientDB. -----")
 ### Création de la base de données Neo4J
 ######################
 
-print("\n----- Création de la même base de données dans Neo4j, pour comparaison des vitesses d'exécution. -----")
+print("\n\n----- Création de la même base de données dans Neo4j, pour comparaison des vitesses d'exécution. -----")
 
 graph = Graph("bolt://localhost", auth=("neo4j", "Neo4J"))
 graph.delete_all()
@@ -280,7 +280,7 @@ for k in reco_crea.items() :
         a += 1
         crea[k[0]] = Node("Creature", rid = d.get("@rid"), searchname = d.get("searchname"), uniquename = d.get("uniquename"), gender = d.get("gender"), race = d.get("race"), gatewaylink = d.get("gatewaylink"), born = d.get("born"), altname = d.get("altname"), died = d.get("died"), significance = d.get("significance"), name = d.get("name"), location = d.get("location"), illustrator = d.get("illustrator"))
         graph.create(crea[k[0]])
-print("On a bien importé",a," noeuds creature (",len(reco_crea)," creatures comptees plus haut)")
+print("On a bien importé",a," noeuds creature (",len(reco_crea)," créatures comptées plus haut)")
 
 # TABLE LOCATION
 a = 0
@@ -292,7 +292,7 @@ for k in reco_loc.items() :
         a += 1
         loc[k[0]] = Node("Location", rid = d.get("@rid"), significance = d.get("significance"), area = d.get("area"), searchname = d.get("searchname"), uniquename = d.get("uniquename"), gatewaylink = d.get("gatewaylink"), name = d.get("name"), altname = d.get("altname"), type = d.get("type"), age = d.get("age"), canon = d.get("canon"), illustrator = d.get("illustrator"))
         graph.create(loc[k[0]])
-print("On a bien importé",a," noeuds location (",len(reco_loc)," locations comptees plus haut)")
+print("On a bien importé",a," noeuds location (",len(reco_loc)," locations comptées plus haut)")
 
 # TABLE EVENT
 a = 0
@@ -369,8 +369,8 @@ query5= client.query("SELECT count(*) FROM (SELECT expand(path) FROM (SELECT sho
 print(str(query5[0].count-2)+ " générations séparent Aragorn et Isildur")
 
 #Sixième requête
-print("\n→ Requête 6: Quels sont ces ancêtres?")
-query6= client.query("SELECT name FROM (SELECT expand(path) FROM (SELECT shortestPath($from, $to) AS path LET  $from = (SELECT FROM Creature WHERE name='Aragorn II'), $to = (SELECT FROM Creature WHERE name='Isildur') UNWIND path) limit 100)")
+print("\n→ Requête 6: Quels sont ces ancêtres entre Isildur et Aragorn II ?")
+query6 = client.query("SELECT name FROM (SELECT expand(path) FROM (SELECT shortestPath($from, $to) AS path LET  $from = (SELECT FROM Creature WHERE name='Aragorn II'), $to = (SELECT FROM Creature WHERE name='Isildur') UNWIND path) limit 100)")
 arbre= ""
 for i in range(len(query6)):
     arbre+=query6[i].name+" "
@@ -381,35 +381,98 @@ print(arbre)
 ######################
 print("\n----- Comparaison des temps de calcul pour les requêtes entre OrientDB et Neo4j -----\n")
 
-# Liste des requêtes 
-print("→ Requête introductive : Quand est né Frodon Saquet et quand est-il mort ?")
-print("   Requête OrientDB : " + query0)
+# Initialisation des listes récupérant les temps et requêtes
+tps_requetes = []
+tps_orientdb = []
+tps_neo4j = []
+
+# Requête introductive 
+tps_requetes.append("\n→ Requête 0 : Quand est né Frodon Saquet et quand est-il mort ?")
+print(tps_requetes[0])
+requete_odb = "SELECT * FROM Creature WHERE name = 'Frodo Baggins'"
+print("   Requête OrientDB : " + requete_odb)
 requete_neo = "MATCH (c:Creature) WHERE c.name = 'Frodo Baggins' RETURN c"
-print("   Requête Neo4j : " + requete_neo)
+print("   Requête Neo4j    : " + requete_neo)
 
-#tps_orientdb = 
-tps_orientdb = timeit.timeit('query_orientdb(requete_orientdb)', globals = globals(), number = 100)
-tps_neo4j = timeit.timeit('query_neo4j(requete_neo)', globals = globals(), number = 100)
+tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
+tps_neo4j.append(timeit.timeit('query_neo4j(requete_neo)', globals = globals(), number = 200))
 
-# Figures de comparaison des temps de requêtes
+# Requête 1 
+tps_requetes.append("\n→ Requête 1 : Combien de couples y a-t-il en tout ?")
+print(tps_requetes[1])
+requete_odb = "SELECT COUNT(*) FROM LOVES"
+print("   Requête OrientDB : " + requete_odb)
+requete_neo = "MATCH ()-[l:LOVES]->() RETURN count(l)"
+print("   Requête Neo4j    : " + requete_neo)
 
-x = np.linspace(0, 10, 500)
-y = np.sin(x)
+tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
+tps_neo4j.append(timeit.timeit('query_neo4j(requete_neo)', globals = globals(), number = 200))
 
-fig, ax = plt.subplots()
+# Requête 2
+tps_requetes.append("\n→ Requête 2 : Quelles sont les régions les plus peuplées ?")
+print(tps_requetes[2])
+requete_odb = ("select location, count(*) as regioncount from Creature group by location order by regioncount DESC limit 4 ")
+print("   Requête OrientDB : " + requete_odb)
+requete_neo = ""
+print("   Requête Neo4j    : " + requete_neo)
 
-# Using set_dashes() to modify dashing of an existing line
-line1, = ax.plot(x, y, label='Using set_dashes()')
-line1.set_dashes([2, 2, 10, 2])  # 2pt line, 2pt break, 10pt line, 2pt break
+tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
+tps_neo4j.append(timeit.timeit('query_neo4j(requete_neo)', globals = globals(), number = 200))
 
-# Using plot(..., dashes=...) to set the dashing when creating a line
-line2, = ax.plot(x, y - 0.2, dashes=[6, 2], label='Using the dashes parameter')
+# Requête 3
+tps_requetes.append("\n→ Requête 3 : Combien d'enfants a Samwise Gamgee ?")
+print(tps_requetes[3])
+requete_odb = ("MATCH {Class: Creature, as: Father, where: (name='Samwise Gamgee')}-BEGETS->{Class: Creature, as: Children} RETURN Children")
+print("   Requête OrientDB : " + requete_odb)
+requete_neo = ""
+print("   Requête Neo4j    : " + requete_neo)
 
-ax.legend()
+tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
+tps_neo4j.append(timeit.timeit('query_neo4j(requete_neo)', globals = globals(), number = 200))
+
+# Requête 4
+tps_requetes.append("\n→ Requête 4 : Combien y a t-il de triangle amoureux et qui en fait partis ?")
+print(tps_requetes[4])
+requete_odb = ("MATCH {Class: Creature, as: C1}-LOVES->{Class: Creature, as: C2}-LOVES->{Class: Creature, as: C3} RETURN C1.name as C1, C2.name as C2, C3.name as C3")
+print("   Requête OrientDB : " + requete_odb)
+requete_neo = ""
+print("   Requête Neo4j    : " + requete_neo)
+
+tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
+tps_neo4j.append(timeit.timeit('query_neo4j(requete_neo)', globals = globals(), number = 200))
+
+# Requête 5
+tps_requetes.append("\n→ Requête 5 : Combien de générations directes séparent Isildur et Aragorn II ?")
+print(tps_requetes[5])
+requete_odb = ("SELECT count(*) FROM (SELECT expand(path) FROM (SELECT shortestPath($from, $to) AS path LET  $from = (SELECT FROM Creature WHERE name='Aragorn II'), $to = (SELECT FROM Creature WHERE name='Isildur') UNWIND path))")
+print("   Requête OrientDB : " + requete_odb)
+requete_neo = ""
+print("   Requête Neo4j    : " + requete_neo)
+
+tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
+tps_neo4j.append(timeit.timeit('query_neo4j(requete_neo)', globals = globals(), number = 200))
+
+# Graphique lignes
+print("\nEvolution des temps de calculs par requête selon la base de données utilisée")
+tps_comp = pd.DataFrame(list(zip(range(0,5), tps_requetes, tps_orientdb, tps_neo4j)), 
+               columns =['NumRequete', 'Requete', 'OrientDB', 'Neo4j'])
+
+plt.rcParams.update({'font.size': 16})
+plt.figure(figsize=(9,5))  
+ax = plt.gca()
+tps_comp.plot(kind='line',x='NumRequete',y='OrientDB',ax=ax)
+tps_comp.plot(kind='line',x='NumRequete',y='Neo4j', color='red', ax=ax)
 plt.show()
+
+# Boxplot récapitulatif
+print("\nBoxplot des temps de calculs selon la base de données utilisée")
+tps_comp.boxplot(column=['OrientDB', 'Neo4j'], fontsize = 16, grid = False, figsize = (9,5))
+
+
 
 ######################
 ### Déconnexion de la BDD
 ######################
 client.db_close()
-print("\n----- Déconnexion de la base de données 'tolkien' -----\n\n")
+print("\n\n----- Déconnexion de la base de données 'tolkien' de OrientDB effectuée -----\n\n")
+print("\nPour se déconnecter de la base de données de Neo4j, aller dans Neo4j Desktop et cliquer sur Stop.")
