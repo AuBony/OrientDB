@@ -15,7 +15,7 @@ from pyorient.ogm import Graph, Config
 import json        # Importation du fichier de données json
 
 # Données
-data_lotr = json.load(open('./donnees/data_tolkien.json', 'r'))
+data_lotr = json.load(open('./donnees/data_tolkien.json', 'r', encoding='utf-8'))
     
 ######################
 ### Connexion a la BDD
@@ -119,21 +119,6 @@ print("Propriétés de Event créées")
 print("Toutes les propriétés ont été créées")
 
 ######################
-### Création des records SYSTEM dans la BDD
-######################
-# Ne fonctionne pas
-
-#    print("\n----- Insertion des records des classes SYSTEM dans la base de données -----")
-#    for k in data_lotr.get("records"):
-#        if k.get("@class") == "_studio":
-#            record_k = {"type":  k.get("type"),
-#                        "config": k.get("config"),
-#    #                    "user": "#6"+str(k.get("user")[2:len(k.get("user", " "))])
-#                        }
-#            id_cluster = 28
-#            client.record_create(id_cluster, record_k)
-
-######################
 ### Création des records USER dans la BDD
 ######################
 print("\n----- Insertion des records dans la base de données -----")
@@ -141,49 +126,6 @@ print("\n----- Insertion des records dans la base de données -----")
 for k in data_lotr.get("records"):
     # Classe Creature
     if k.get("@class") == "Creature":
-#        out_beget_tmp = k.get("out_BEGETS", [])
-#        for i in range(0, len(out_beget_tmp)):
-#            out_beget_tmp[i] = "#21"+str(out_beget_tmp[i][3:len(out_beget_tmp[i])])
-#
-#        in_beget_tmp = k.get("in_BEGETS", [])
-#        for i in range(0, len(in_beget_tmp)):
-#            in_beget_tmp[i] = "#21"+str(in_beget_tmp[i][3:len(in_beget_tmp[i])])
-#            
-#        in_loves_tmp = k.get("in_LOVES", [])
-#        for i in range(0, len(in_loves_tmp)):
-#            in_loves_tmp[i] = "#22"+str(in_loves_tmp[i][3:len(in_loves_tmp[i])])
-#            
-#        in_hassibling_tmp = k.get("in_HASSIBLING", [])
-#        for i in range(0, len(in_hassibling_tmp)):
-#            in_hassibling_tmp[i] = "#23"+str(in_hassibling_tmp[i][3:len(in_hassibling_tmp[i])])
-#        
-#        out_loves_tmp = k.get("out_LOVES", [])
-#        for i in range(0, len(out_loves_tmp)):
-#            out_loves_tmp[i] = "#22"+str(out_loves_tmp[i][3:len(out_loves_tmp[i])])
-#            
-#        out_hassibling_tmp = k.get("out_HASSIBLING", [])
-#        for i in range(0, len(out_hassibling_tmp)):
-#            out_hassibling_tmp[i] = "#23"+str(out_hassibling_tmp[i][3:len(out_hassibling_tmp[i])])
-            
-#        record_k = {"searchname": k.get("searchname"),
-#                    "uniquename": k.get("uniquename"),
-#                    "gender": k.get("gender"),
-#                    "race": k.get("race"),
-#                    "gatewaylink": k.get("gatewaylink"),
-#                    "born": k.get("born"),
-#                    "altname": k.get("altname"),
-#            		"died": k.get("died"),
-#            		"significance": k.get("significance"),
-#                    "name": k.get("name"),
-#            		"location": k.get("location"),
-#                    "in_HASSIBLING": in_hassibling_tmp,
-#                    "out_HASSIBLING": out_hassibling_tmp,
-#                    "in_BEGETS": in_beget_tmp, # ID BEGETS 14 -> 21
-#            		"out_BEGETS": out_beget_tmp, # ID BEGETS 14 -> 21
-#            		"in_LOVES": in_loves_tmp, # ID LOVE 15 -> 22
-#                    "out_LOVES": out_loves_tmp, 
-#            		"illustrator": k.get("illustrator"),
-#                    }
         # altname et location : remplacement des " en '
         location = str(k.get('location')).replace('"', "'")
         altname = str(k.get('altname')).replace('"', "'")
