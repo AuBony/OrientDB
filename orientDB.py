@@ -370,7 +370,7 @@ for i in range(len(query2)):
     
 # Troisième requete
 print("\n→ Requête 3 : Combien d'enfants a Samwise Gamgee ?")
-query3 = client.query("MATCH {Class: Creature, as: Father, where: (name='Samwise Gamgee')}-BEGETS->{Class: Creature, as: Children} RETURN Children")
+query3 = client.query("MATCH {Class: Creature, as: Father, where: (name='Samwise Gamgee')}<-BEGETS-{Class: Creature, as: Children} RETURN Children")
 print("Samwise a "+str(len(query3))+" enfants.")
 
 #Quatrième requete
@@ -484,7 +484,7 @@ plt.show()
 # Boxplot récapitulatif
 print("\nBoxplot des temps de calculs selon la base de données utilisée")
 tps_comp.boxplot(column=['OrientDB', 'Neo4j'], fontsize = 16, grid = False, figsize = (9,5))
-
+print(tps_comp.boxplot(column=['OrientDB', 'Neo4j'], fontsize = 16, grid = False, figsize = (9,5)))
 
 
 ######################
