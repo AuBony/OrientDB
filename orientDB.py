@@ -11,11 +11,12 @@ message = """
 Avant de continuer ce script, vérifiez que :
 → Dans le dossier où ce script est, vous avez bien un dossier 'donnees' avec le document 'data_tolkien.json'
 → Vous avez bien lancé le 'server.bat' de OrientDB
-→ Vous avez bien créé une base de données vide locale Neo4j avec Neo4j Desktop, ayant pour nom "neo4j" et en password "Neo4J"
+→ Vous avez bien créé une base de données vide locale Neo4j avec Neo4j Desktop, ayant pour user "neo4j" et en password "Neo4J"
 → Vous avez bien fait Start pour cette base de données sur Neo4j Desktop
 → Vous avez bien installé pyorient
     - Dans la console : pip install pyorient
     - Puis mise à jour avec : pip install --upgrade git+https://github.com/OpenConjecture/pyorient.git
+→ Vous avez bien installé py2neo (dans la console: pip install py2neo)
     
 """
 print(message)
@@ -42,10 +43,18 @@ data_lotr = json.load(open('./donnees/data_tolkien.json', 'r', encoding='utf-8')
 ######################
 # Création des fonctions de temps de calcul
 def query_neo4j(requete_neo):
+    ''' 
+    prend en entrée une requête Neo4j sous forme de chaîne caractères
+    renvoie une liste contenant les objets py2neo
+    '''
     data = list(graph.run(requete_neo))
     return(data)
 
 def query_orientdb(requete_orientdb):
+    ''' 
+    prend en entrée une requête OrientDB sous forme de chaîne caractères
+    renvoie un objet pyorient
+    '''
     data = client.query(requete_orientdb)
     return(data)
     
@@ -271,6 +280,9 @@ for k in data_lotr.get("records"):
 
 ## NOEUDS
 # TABLE CREATURE
+
+print("\n----- Création des noeuds -----")
+
 a = 0
 crea = {}
 
@@ -283,6 +295,7 @@ for k in reco_crea.items() :
 print("On a bien importé",a," noeuds creature (",len(reco_crea)," créatures comptées plus haut)")
 
 # TABLE LOCATION
+
 a = 0
 loc = {}
 
@@ -295,6 +308,7 @@ for k in reco_loc.items() :
 print("On a bien importé",a," noeuds location (",len(reco_loc)," locations comptées plus haut)")
 
 # TABLE EVENT
+
 a = 0
 ev = {}
 
@@ -308,6 +322,9 @@ print("On a bien importé",a,"noeuds event (",len(reco_ev)," events comptés plu
 
 
 ## RELATIONS
+
+print("\n----- Création des relations -----")
+
 rel = []
 for k in reco_rel.items():
     a = k[1]
