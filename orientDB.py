@@ -365,7 +365,7 @@ for i in range(len(query2)):
     if i==0:
         res = ("Il y a "+ str(query2[i].regioncount)+" personnes dont on ne connait pas la région.")
     else:
-        res = ("La région "+ str(query2[i].location)+" est la "+ str(i+1) +"ème plus grande région, et elle héberge "+str(query2[i].regioncount)+" personnes")
+        res = ("La région "+ str(query2[i].location)[4:len(str(query2[i].location))-4]+" est la "+ str(i+1) +"ème plus grande région, et elle héberge "+str(query2[i].regioncount)+" personnes")
     print(res)
     
 # Troisième requete
@@ -393,6 +393,8 @@ for i in range(len(query6)):
     arbre+=query6[i].name+" "
 print(arbre)
 
+print('\n')
+input("Appuyez sur Entrée pour continuer : ")
 ######################
 ### Comparaison requetes OrientDB Neo4j
 ######################
@@ -436,6 +438,8 @@ print("   Requête Neo4j    : " + requete_neo)
 tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
 tps_neo4j.append(timeit.timeit('query_neo4j(requete_neo)', globals = globals(), number = 200))
 
+
+
 # Requête 3
 tps_requetes.append("\n→ Requête 3 : Combien d'enfants a Samwise Gamgee ?")
 print(tps_requetes[3])
@@ -469,6 +473,8 @@ print("   Requête Neo4j    : " + requete_neo)
 tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
 tps_neo4j.append(timeit.timeit('query_neo4j(requete_neo)', globals = globals(), number = 200))
 
+print('\n')
+input("Appuyez sur Entrée pour afficher le premier graphique : ")
 # Graphique lignes
 print("\nEvolution des temps de calculs par requête selon la base de données utilisée")
 tps_comp = pd.DataFrame(list(zip(range(0,5), tps_requetes, tps_orientdb, tps_neo4j)), 
@@ -481,11 +487,16 @@ tps_comp.plot(kind='line',x='NumRequete',y='OrientDB',ax=ax)
 tps_comp.plot(kind='line',x='NumRequete',y='Neo4j', color='red', ax=ax)
 plt.show()
 
+print('\n')
+input("Appuyez sur Entrée pour afficher le deuxième graphique : ")
+
 # Boxplot récapitulatif
 print("\nBoxplot des temps de calculs selon la base de données utilisée")
 tps_comp.boxplot(column=['OrientDB', 'Neo4j'], fontsize = 16, grid = False, figsize = (9,5))
-print(tps_comp.boxplot(column=['OrientDB', 'Neo4j'], fontsize = 16, grid = False, figsize = (9,5)))
+plt.show()
 
+print('\n')
+input("Appuyez sur Entrée pour fermer la base : ")
 
 ######################
 ### Déconnexion de la BDD
