@@ -413,7 +413,7 @@ tps_requetes.append("\n→ Requête 2 : Quelles sont les régions les plus peupl
 print(tps_requetes[2])
 requete_odb = ("select location, count(*) as regioncount from Creature group by location order by regioncount DESC limit 4 ")
 print("   Requête OrientDB : " + requete_odb)
-requete_neo = ""
+requete_neo = "MATCH (c:Creature) WITH c, c.location as p RETURN p,count(c) ORDER BY count(c) DESC LIMIT 4"
 print("   Requête Neo4j    : " + requete_neo)
 
 tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
@@ -424,7 +424,7 @@ tps_requetes.append("\n→ Requête 3 : Combien d'enfants a Samwise Gamgee ?")
 print(tps_requetes[3])
 requete_odb = ("MATCH {Class: Creature, as: Father, where: (name='Samwise Gamgee')}-BEGETS->{Class: Creature, as: Children} RETURN Children")
 print("   Requête OrientDB : " + requete_odb)
-requete_neo = ""
+requete_neo = "MATCH (c:Creature)-[:BEGETS]->(e:Creature) WHERE c.name='Samwise Gamgee' RETURN e"
 print("   Requête Neo4j    : " + requete_neo)
 
 tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
@@ -435,7 +435,7 @@ tps_requetes.append("\n→ Requête 4 : Combien y a t-il de triangle amoureux et
 print(tps_requetes[4])
 requete_odb = ("MATCH {Class: Creature, as: C1}-LOVES->{Class: Creature, as: C2}-LOVES->{Class: Creature, as: C3} RETURN C1.name as C1, C2.name as C2, C3.name as C3")
 print("   Requête OrientDB : " + requete_odb)
-requete_neo = ""
+requete_neo = "MATCH (c1:Creature)-[:LOVES]->(c2:Creature)-[:LOVES]->(c3:Creature) RETURN c1,c2,c3"
 print("   Requête Neo4j    : " + requete_neo)
 
 tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))
@@ -446,7 +446,7 @@ tps_requetes.append("\n→ Requête 5 : Combien de générations directes sépar
 print(tps_requetes[5])
 requete_odb = ("SELECT count(*) FROM (SELECT expand(path) FROM (SELECT shortestPath($from, $to) AS path LET  $from = (SELECT FROM Creature WHERE name='Aragorn II'), $to = (SELECT FROM Creature WHERE name='Isildur') UNWIND path))")
 print("   Requête OrientDB : " + requete_odb)
-requete_neo = ""
+requete_neo = "MATCH (s:Creature {name:'Aragorn II'}), (e:Creature {name:'Isildur'}), p = shortestPath((s)-[*]-(e)) RETURN p"
 print("   Requête Neo4j    : " + requete_neo)
 
 tps_orientdb.append(timeit.timeit('query_orientdb(requete_odb)', globals = globals(), number = 200))

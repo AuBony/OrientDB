@@ -1,7 +1,8 @@
 
 # AVANT DE LANCER LE PYTHON
-# Creer et activer une nouvelle base ocale sur Neo4j Desktop avec en user "neo4j" et en password "Neo4J"
+# Creer une nouvelle base ocale sur Neo4j Desktop avec en user "neo4j" et en password "Neo4J"
 # Attention, si vous ne prenez pas une nouvelle base, tous vos noeuds et relations deja existants seront supprimes!
+# Activer la nouvelle base (appuyer sur START)
 # Ouvrir le browser
 # Mettez a jour le chemin pour acceder au fichier de donnees depuis votre ordinateur
 
@@ -107,15 +108,45 @@ print("Requête demandée : " + requete)
 data = list(graph.run(requete))[0][0]
 print("Frodon est né le " + str(data['born']) + " et est mort le " + str(data['died']))
 
+# Premiere requete
+print("\n→ Requête 1 : Combien de couples y a-t-il en tout ?")
+res1 = list(graph.run("MATCH ()-[l:LOVES]->() RETURN count(l)"))[0][0]
+print("Il y a "+ str(res1)+ " couples.")
 
-# Trouver les creatures concernees par l'amour
+# Deuxième requête
+print("\n→ Requête 2 : Quelles sont les régions 3 les plus peuplées ?")
+res2 = list(graph.run("MATCH (c:Creature) WITH c, c.location as p RETURN p,count(c) ORDER BY count(c) DESC LIMIT 4"))
+print("Il y a "+ str(res2[0]['count(c)'])+" personnes dont on ne connait pas la région.")
+print("Les trois régions les plus peuplées sont:")
+for i in range(1,len(res2)):
+    reg = res2[i]['p'][0]
+    print("La région "+str(reg)+" est la "+ str(i) +"e plus grande région, et elle héberge "+str(res2[i]['count(c)'])+" personnes")
 
-# R1 = list(graph.run("MATCH (n :Creature) –[ :LOVES] – (m) return n,m"))
-#
-# # Trouver tous les enfants de Sam
-# # MATCH (c:Creature {name : "Samwise Gamgee"})-[:BEGETS]->(e:Creature) RETURN c,e
-#
-# R3 = list(graph.run("MATCH (c:Creature {name : "Samwise Gamgee"})-[:BEGETS]->(e:Creature) RETURN c,e"))
-#
-# R3 = list(graph.run("MATCH (c:Creature) – [:`BEGETS`] –> (e:Creature) WHERE c.name="Samwise Gamgee" RETURN e"))
+# Troisième requete
+print("\n→ Requête 3 : Combien d'enfants a Samwise Gamgee et comment s'appellent-ils' ?")
+res3 = list(graph.run("MATCH (c:Creature)-[:BEGETS]->(e:Creature) WHERE c.name='Samwise Gamgee' RETURN e"))
+print("Samwise a "+str(len(res3))+" enfants.")
+print("Ils s'appellent :")
+for i in range(len(res3)):
+    print("- "+str(res3[i][0]['searchname']))
+
+# Quatrième requete
+print("\n→ Requête 4 : Combien y a t-il de triangle amoureux et qui en fait partis ?")
+res4 = list(graph.run("MATCH (c1:Creature)-[:LOVES]->(c2:Creature)-[:LOVES]->(c3:Creature) RETURN c1,c2,c3"))[0]
+print("Il y a "+str(int(len(res4)/3))+" triangle amoureux.")
+print("Les membres du triangle amoureux sont: "+str(res4[0]['searchname'])+", "+res4[1]['searchname']+" et "+res4[2]['searchname']+".")
+
+# Cinquième requête
+print("\n→ Requête 5 : Combien de générations directes séparent Isildur et Aragorn II ?")
+res5 = list(graph.run("MATCH (s:Creature {name:'Aragorn II'}), (e:Creature {name:'Isildur'}), p = shortestPath((s)-[*]-(e)) RETURN p"))[0]
+print(str(len(res5[0][0])-1)+ " générations séparent Aragorn et Isildur.")
+
+# Sixième requête - PAS ENCORE REUSSI
+print("\n→ Requête 6: Quels sont ces ancêtres?")
+rel1 = res5[0][0][0] # type py2neo.data.BEGETS
+# res6 =
+# arbre= ""
+# for i in range(len(res6)):
+#     arbre+=query6[i].name+" "
+# print(arbre)
 
