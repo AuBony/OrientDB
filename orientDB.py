@@ -241,7 +241,7 @@ print("Insertion des edge terminée")
 print("\n----- La base de données a bien été créée dans OrientDB. -----")
 
 
-
+input("Appuyez sur Entrée pour continuer en créant la base de données Neo4j : ")
 ##################################################################################################################
 ######################
 ### Création de la base de données Neo4J
